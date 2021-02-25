@@ -2,7 +2,7 @@ mainSections:
   - posts
 description: Eureka is a elegant and powerful theme for Hugo.
 
-repoURL:
+repoURL: https://github.com/jmmaloney4/jmmaloney4.github.io
 # If it is a Github repo, leave blank
 repoEditURL:
 
@@ -16,8 +16,8 @@ colorScheme:
 # E.g. Person, Organization, LocalBusiness, Project, EducationalOrganization
 siteType: Person
 icon: images/icon.png
-publisherName: C. Wang
-publisherLogo:
+publisherName: Jack Maloney
+publisherLogo: 
 
 highlight:
   handler: highlightjs

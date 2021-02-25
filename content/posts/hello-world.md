@@ -2,7 +2,7 @@
 title = "Hello World"
 description = ""
 toc = true
-authors = []
+authors = ["Jack Maloney"]
 tags = []
 categories = []
 series = []
@@ -14,3 +14,7 @@ draft = false
 +++
 
 # Hello, World!
+
+\\[ 
+    \exp \left( x \right) = \sum_{n=0}^{\infty} \frac{x^n}{n!} 
+\\]

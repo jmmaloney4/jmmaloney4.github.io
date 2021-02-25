@@ -1,10 +1,10 @@
 main:
   - name: About
-    url: '#about'
+    url: '/homepage/'
     weight: 1
   - name: Posts
     url: /posts/
     weight: 2
-  - name: Docs
-    url: /docs/
-    weight: 3
+  # - name: Docs
+  #   url: /docs/
+  #   weight: 3
