@@ -20,18 +20,18 @@ widget:
   handler: about
 
   # Options: sm, md, lg and xl. Default is md.
-  width:
+  width: sm
 
   sidebar:
     # Options: left and right. Leave blank to hide.
-    position:
+    position: left
     # Options: sm, md, lg and xl. Default is md.
-    scale:
+    scale: sm
   
   background:
     # Options: primary, secondary, tertiary or any valid color value. Default is primary.
-    color: secondary
-    image:
+    color: tertiary
+    image: 
     # Options: auto, cover and contain. Default is auto.
     size:
     # Options: center, top, right, bottom, left.
