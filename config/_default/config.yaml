@@ -8,7 +8,7 @@ theme: github.com/wangchucheng/hugo-eureka
 
 paginate: 3
 copyright: >
-  &copy; 2021 Jack Maloney
+  &copy; 2021 <a href="https://github.com/jmmaloney4">Jack Maloney</a>
 enableEmoji: true
 enableGitInfo: true
 summaryLength: 75
