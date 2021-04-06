@@ -6,10 +6,6 @@ title: Jack Maloney
 # Uncomment when installing using Hugo Modules
 theme: github.com/wangchucheng/hugo-eureka
 
-# module:
-#   imports:
-#   - path: github.com/wowchemy/wowchemy-hugo-modules
-
 paginate: 3
 copyright: >
   &copy; 2021 <a href="https://github.com/jmmaloney4">Jack Maloney</a>
@@ -34,8 +30,6 @@ markup:
     endLevel: 6
     ordered: false
   goldmark:
-    extensions:
-      footnote: true
     renderer:
       unsafe: true
 

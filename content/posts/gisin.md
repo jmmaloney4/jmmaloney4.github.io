@@ -8,4 +8,3 @@ catergories: []
 keywords: []
 ---
 
-I recently read __
