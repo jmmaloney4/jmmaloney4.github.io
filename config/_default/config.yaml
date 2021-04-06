@@ -41,3 +41,5 @@ taxonomies:
 
 build:
   useResourceCacheWhen: always
+
+metaDataFormat: "yaml"

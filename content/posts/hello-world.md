@@ -18,3 +18,5 @@ draft = false
 \\[ 
     \exp \left( x \right) = \sum_{n=0}^{\infty} \frac{x^n}{n!} 
 \\]
+
+New modification
