@@ -4,5 +4,6 @@
   "extends": ["config:base"],
   "rebaseWhen": "behind-base-branch",
   "dependencyDashboard": true,
-  "dependencyDashboardTitle": "Renovate Dashboard"
+  "dependencyDashboardTitle": "Renovate Dashboard",
+  "asignees": ["jmmaloney4"]
 }
