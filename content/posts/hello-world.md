@@ -10,7 +10,7 @@ date =  "2021-02-24T18:41:22-06:00"
 lastmod = "2021-02-24T18:41:22-06:00"
 featuredVideo = ""
 featuredImage = ""
-draft = false
+draft = true
 +++
 
 # Hello, World!
@@ -18,5 +18,3 @@ draft = false
 \\[ 
     \exp \left( x \right) = \sum_{n=0}^{\infty} \frac{x^n}{n!} 
 \\]
-
-New modification
