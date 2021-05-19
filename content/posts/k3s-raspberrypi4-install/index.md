@@ -1,16 +1,14 @@
 ---
 title: "Installing K3s with embedded etcd on RaspberryPi 4"
-date: 2021-04-22T03:07:43-05:00
-draft: true
+date: 2021-05-19
+draft: false
 
 tags: [k8s]
 catergories: []
 keywords: []
 ---
 
-Today I'm writing about installing [k3os](https://k3os.io/) on a Raspberry Pi 4. 
-
-We will use [`k3sup`](https://github.com/alexellis/k3sup) to install k3s onto our Raspberry Pi 4s. To install this on macOS we can simply use Homebrew:
+Today we will use [`k3sup`](https://github.com/alexellis/k3sup) to install k3s onto our Raspberry Pi 4s. To install this tool on macOS we can simply use Homebrew:
 
 ```shell
 brew install k3sup
@@ -144,13 +142,41 @@ Then run the ansible playbook like so:
 ansible-playbook -u k3s -i inventory.toml rpi_init.yaml
 ```
 
-After your pi reboots, run the following command using k3sup
+After your pi reboots, run the following command using k3sup:
 
 ```
 k3sup install \
   --cluster \
-  --k3s-channel v1.21 \
+  --k3s-channel v1.21.0+k3s1 \ # Or whatever is latest [see](https://github.com/k3s-io/k3s/releases)
   --user k3s --ip 192.168.1.20
 ```
 
+This command will initilize the first server node. To add additional nodes as other etcd/controlplane nodes (You need an odd integer greater than three) run:
 
+```
+k3sup join \
+  --server \
+  --k3s-channel v1.21.0+k3s1 \
+  --user k3s --ip 192.168.1.21 \
+  --server-user k3s --server-ip 192.168.1.20
+```
+
+And to add them as non-etcd/worker nodes just drop the `--server`:
+
+```
+k3sup join \
+  --k3s-channel v1.21.0+k3s1 \
+  --user k3s --ip 192.168.1.23 \
+  --server-user k3s --server-ip 192.168.1.20
+```
+
+When adding new nodes, you may replace the `--server-ip` with any of the etcd/controlplane nodes.
+
+That's it! There should be a file called `kubeconfig` in your local directory. Run 
+
+```
+mv ./kubeconfig ~/.kube/config
+kubectl get nodes --watch
+```
+
+And watch as your nodes register themselves to the cluster.
