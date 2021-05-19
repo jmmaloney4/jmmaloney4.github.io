@@ -1,0 +1,106 @@
+<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content="width=device-width"><title>Installing K3s with embedded etcd on RaspberryPi 4 | Jack Maloney</title><meta name=generator content="Hugo Eureka 0.8.0"><link rel=stylesheet href=/css/eureka.min.css><script defer src=/js/eureka.min.js></script><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" as=style onload="this.onload=null,this.rel='stylesheet'"><link rel=stylesheet href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/styles/solarized-light.min.css media=print onload="this.media='all',this.onload=null" crossorigin><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/highlight.min.js crossorigin></script><script defer src=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.0/build/languages/python.min.js crossorigin></script><script defer src=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/js/all.min.js integrity="sha256-uNYoXefWRqv+PsIF/OflNmwtKM4lStn9yrz2gVl6ymo=" crossorigin></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css integrity=sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X media=print onload="this.media='all',this.onload=null" crossorigin><script defer src=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js integrity=sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4 crossorigin></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js integrity=sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa crossorigin></script><script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script><link rel=icon type=image/png sizes=32x32 href=/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_2.png><link rel=apple-touch-icon sizes=180x180 href=/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_2.png><meta name=description content="Today we will use k3sup to install k3s onto our Raspberry Pi 4s. To install this tool on macOS we can simply use Homebrew:
+brew install k3sup  Next, we will use Balena Etcher. This is a handy tool for flashing images to usb devices and such. It&rsquo;s avaliable on Homebrew under the cask balenaetcher.
+brew install balenaetcher  To install Ubuntu on our Raspberry Pi, head over to the Ubuntu Raspberry Pi downloads page, and grab the latest ."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"/posts/"},{"@type":"ListItem","position":2,"name":"Installing K3s with embedded etcd on RaspberryPi 4","item":"/posts/k3s-raspberrypi4-install/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"/posts/k3s-raspberrypi4-install/"},"headline":"Installing K3s with embedded etcd on RaspberryPi 4 | Jack Maloney","datePublished":"2021-05-19T00:00:00+00:00","dateModified":"2021-05-19T00:50:19-05:00","wordCount":808,"publisher":{"@type":"Person","name":"Jack Maloney","logo":{"@type":"ImageObject","url":"/images/icon.png"}},"description":"Today we will use k3sup to install k3s onto our Raspberry Pi 4s. To install this tool on macOS we can simply use Homebrew:\nbrew install k3sup  Next, we will use Balena Etcher. This is a handy tool for flashing images to usb devices and such. It\u0026rsquo;s avaliable on Homebrew under the cask balenaetcher.\nbrew install balenaetcher  To install Ubuntu on our Raspberry Pi, head over to the Ubuntu Raspberry Pi downloads page, and grab the latest ."}</script><meta property="og:title" content="Installing K3s with embedded etcd on RaspberryPi 4 | Jack Maloney"><meta property="og:type" content="article"><meta property="og:image" content="/images/icon.png"><meta property="og:url" content="/posts/k3s-raspberrypi4-install/"><meta property="og:description" content="Today we will use k3sup to install k3s onto our Raspberry Pi 4s. To install this tool on macOS we can simply use Homebrew:
+brew install k3sup  Next, we will use Balena Etcher. This is a handy tool for flashing images to usb devices and such. It&rsquo;s avaliable on Homebrew under the cask balenaetcher.
+brew install balenaetcher  To install Ubuntu on our Raspberry Pi, head over to the Ubuntu Raspberry Pi downloads page, and grab the latest ."><meta property="og:locale" content="en"><meta property="og:site_name" content="Jack Maloney"><meta property="article:published_time" content="2021-05-19T00:00:00+00:00"><meta property="article:modified_time" content="2021-05-19T00:50:19-05:00"><meta property="article:section" content="posts"><meta property="article:tag" content="k8s"><body class="flex flex-col min-h-screen"><header class="fixed flex items-center w-full min-h-16 pl-scrollbar z-50 bg-secondary-bg shadow-sm"><div class="w-full max-w-screen-xl mx-auto"><script>let storageColorScheme=localStorage.getItem("lightDarkMode");(storageColorScheme=='Auto'&&window.matchMedia("(prefers-color-scheme: dark)").matches||storageColorScheme=="Dark")&&document.getElementsByTagName('html')[0].classList.add('dark')</script><nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0"><a href=/ class="mr-6 text-primary-text text-xl font-bold">Jack Maloney</a>
+<button id=navbar-btn class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+<i class="fas fa-bars"></i></button><div id=target class="hidden block md:flex md:flex-grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20"><div class="md:flex md:h-16 text-sm md:flex-grow pb-4 md:pb-0 border-b md:border-b-0"><a href=/posts/ class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2 selected-menu-item mr-4">Posts</a></div><div class=flex><div class="relative pt-4 md:pt-0"><div class="cursor-pointer hover:text-eureka" id=lightDarkMode><i class="fas fa-sun"></i></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id=is-open></div><div class="absolute flex flex-col left-0 md:left-auto right-auto md:right-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40" id=lightDarkOptions><span class="px-4 py-1 hover:text-eureka" name=Light>Light</span>
+<span class="px-4 py-1 hover:text-eureka" name=Dark>Dark</span>
+<span class="px-4 py-1 hover:text-eureka" name=Auto>Auto</span></div></div></div></div><div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id=is-open-mobile></div></nav><script>let element=document.getElementById('lightDarkMode');storageColorScheme=='Auto'?(element.firstElementChild.classList.remove('fa-sun'),element.firstElementChild.setAttribute("data-icon",'adjust'),element.firstElementChild.classList.add('fa-adjust'),document.addEventListener('DOMContentLoaded',()=>{window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change',switchDarkMode)})):storageColorScheme=="Dark"&&(element.firstElementChild.classList.remove('fa-sun'),element.firstElementChild.setAttribute("data-icon",'moon'),element.firstElementChild.classList.add('fa-moon')),document.addEventListener('DOMContentLoaded',()=>{getcolorscheme(),switchBurger()})</script></div></header><main class="flex-grow pt-16"><div class=pl-scrollbar><div class="w-full max-w-screen-xl lg:px-4 xl:px-8 mx-auto"><div class="grid grid-cols-2 lg:grid-cols-8 gap-4 lg:pt-12"><div class="col-span-2 lg:col-start-2 lg:col-span-6 bg-secondary-bg rounded px-6 py-8"><h1 class="font-bold text-3xl text-primary-text">Installing K3s with embedded etcd on RaspberryPi 4</h1><div class="flex flex-wrap flex-row items-center mt-2 text-tertiary-text"><div class="mr-6 my-2"><i class="fas fa-calendar mr-1"></i>
+<span>2021-05-19</span></div><div class="mr-6 my-2"><i class="fas fa-clock mr-1"></i>
+<span>4 min read</span></div></div><div class=content><p>Today we will use <a href=https://github.com/alexellis/k3sup><code>k3sup</code></a> to install k3s onto our Raspberry Pi 4s. To install this tool on macOS we can simply use Homebrew:</p><pre><code class=language-shell>brew install k3sup
+</code></pre><p>Next, we will use <a href=https://etcherpc.com/>Balena Etcher</a>. This is a handy tool for flashing images to usb devices and such. It&rsquo;s avaliable on Homebrew under the cask <code>balenaetcher</code>.</p><pre><code class=language-shell>brew install balenaetcher
+</code></pre><p>To install Ubuntu on our Raspberry Pi, head over to the <a href=https://ubuntu.com/download/raspberry-pi>Ubuntu Raspberry Pi downloads page</a>, and grab the latest <code>.iso</code>. Plug your SD card into your computer, start up Etcher, and follow the instructions to flash the image onto your SD card.</p><p>The next thing we want to do is to update the <code>user-data</code>. This manages the operation of <a href=https://cloudinit.readthedocs.io/en/latest/index.html><code>cloud-init</code></a>, which creates your user, with appropriate SSH <code>authorized_keys</code> and such on the first boot. My file looks like this:</p><pre><code class=language-yaml>#cloud-config
+hostname: pixie0
+ssh_pwauth: false
+
+users:
+- name: k3s
+  ssh_import_id:
+  - gh:jmmaloney4
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+</code></pre><p>This disables password-authenticated ssh, and creates one user named <code>k3s</code> with ssh <code>authorized_keys</code> from the GitHub account <code>jmmaloney4</code>, and passwordless sudo permissions. There are lots of other cloud-init options, but these are the basics needed to get an installation of Ubuntu up and running.</p><p>After modifying the <code>user-data</code> file on the root of the newly-flashed SD card, eject it, insert it into your Raspberry Pi and boot it up. It may take a few minutes for your ssh keys to get copied to <code>authorized_keys</code>, so don&rsquo;t be alarmed if you cannot immediately log into your pi.</p><p>Next we need to configure the machine a little bit. We will use <code>ansible</code> to do this. The first task is to fix the kernel cmdline to enable some features required by Kubernetes.</p><pre><code class=language-yaml>- name: Fix RaspberryPi cmdline
+  hosts: all
+  become: true
+  tasks:
+  - name: Fix cmdline
+    register: fix_cmdline
+    ansible.builtin.command:
+      argv:
+      - &quot;bash&quot;
+      - &quot;-c&quot;
+      - |
+        mv /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.bup;
+        head -n 1 /boot/firmware/cmdline.txt.bup | tr -d '\n' | cat - &lt;(echo ' cgroup_memory=1 cgroup_enable=cpuset cgroup_enable=memory') &gt; /boot/firmware/cmdline.txt;
+        touch /boot/firmware/.CMDLINE_FIXED&quot;
+      creates: /boot/firmware/.CMDLINE_FIXED
+  - name: Reboot
+    ansible.builtin.reboot:
+    when: fix_cmdline is changed
+</code></pre><p>The first task <code>fix_cmdline</code> ensures that the <code>/boot/firmware/cmdline.txt</code> file has <code>cgroup_memory=1 cgroup_enable=cpuset cgroup_enable=memory</code> present. The tricky part is that it all has to be one line, and there doesn&rsquo;t seem to be a good way to append to the same line built in to ansible. So theres a little shell sorcery. The second task just ensures that the Raspberry Pis reboot, in order to enact the changes, but only when necessary.</p><p>Next we need to disable the swap. This is to give K8s full management of the memory available on the device, thus pods can be scheduled apropriately, and not where they will be constantly swapped out.</p><pre><code class=language-yaml>- name: Disable Swap
+  hosts: all
+  become: true
+  tasks:
+  - name: Remove swap from /etc/fstab
+    mount:
+      name: &quot;{{ item }}&quot;
+      fstype: swap
+      state: absent
+    with_items:
+      - swap
+      - none
+  - name: Disable swap
+    command: swapoff -a
+    when: ansible_swaptotal_mb &gt; 0
+</code></pre><p>This play will remove the swap line from <code>/etc/fstab</code>, and disable swap.</p><p>Finally, we can install Docker.</p><pre><code class=language-yaml>- name: Install/Upgrade and configure Docker
+  hosts: all
+  become: true
+  tasks:
+  - name: Install/Upgrade Docker
+    ansible.builtin.apt:
+      name: docker.io
+      update_cache: yes
+      state: latest
+  - name: Start Docker service
+    ansible.builtin.systemd:
+      name: docker
+      enabled: yes
+      state: started
+  - name: Add user to docker group
+    ansible.builtin.user: 
+      name: &quot;{{ ansible_user }}&quot;
+      groups: docker
+      append: yes
+</code></pre><p>This play installs the <code>docker.io</code> apt package, ensures the <code>docker</code> service is started, and will continue to start on each reboot, and then adds our <code>k3s</code> user to the <code>docker</code> group, which is important to ensure that docker commands can be executed without a password.</p><p>Throw each of these plays into a playbook file called <code>rpi_init.yaml</code> like so:</p><pre><code class=language-yaml>- name: Fix RaspberryPi cmdline
+  ...
+
+- name: Disable Swap
+  ...
+
+- name: Install/Upgrade and configure Docker
+  ...
+</code></pre><p>Then setup an <code>inventory.toml</code> file by literally listing each ip address you play to use line by line:</p><pre><code>192.168.1.20
+192.168.1.21
+192.168.1.22
+</code></pre><p>Then run the ansible playbook like so:</p><pre><code>ansible-playbook -u k3s -i inventory.toml rpi_init.yaml
+</code></pre><p>After your pi reboots, run the following command using k3sup:</p><pre><code>k3sup install \
+  --cluster \
+  --k3s-channel v1.21.0+k3s1 \ # Or whatever is latest [see](https://github.com/k3s-io/k3s/releases)
+  --user k3s --ip 192.168.1.20
+</code></pre><p>This command will initilize the first server node. To add additional nodes as other etcd/controlplane nodes (You need an odd integer greater than three) run:</p><pre><code>k3sup join \
+  --server \
+  --k3s-channel v1.21.0+k3s1 \
+  --user k3s --ip 192.168.1.21 \
+  --server-user k3s --server-ip 192.168.1.20
+</code></pre><p>And to add them as non-etcd/worker nodes just drop the <code>--server</code>:</p><pre><code>k3sup join \
+  --k3s-channel v1.21.0+k3s1 \
+  --user k3s --ip 192.168.1.23 \
+  --server-user k3s --server-ip 192.168.1.20
+</code></pre><p>When adding new nodes, you may replace the <code>--server-ip</code> with any of the etcd/controlplane nodes.</p><p>That&rsquo;s it! There should be a file called <code>kubeconfig</code> in your local directory. Run</p><pre><code>mv ./kubeconfig ~/.kube/config
+kubectl get nodes --watch
+</code></pre><p>And watch as your nodes register themselves to the cluster.</p></div><div class=my-4><a href=/tags/k8s/ class="inline-block bg-tertiary-bg text-sm rounded px-3 py-1 my-1 mr-2 hover:text-eureka">#k8s</a></div><div class="flex md:justify-end my-4"><a href=https://github.com/jmmaloney4/jmmaloney4.github.io/tree/main/content/posts/k3s-raspberrypi4-install/index.md title="Edit this page"><i class="fas fa-edit mr-1"></i>
+<span>Edit this page</span></a></div><div class="flex flex-col md:flex-row md:justify-between -mx-2 mt-4 px-2 pt-4 border-t"><div></div><div class="md:text-right mt-4 md:mt-0"><span class="block font-bold">Next</span>
+<a href=/posts/hello-world/ class=block>Hello World</a></div></div></div></div><script>document.addEventListener('DOMContentLoaded',()=>{hljs.initHighlightingOnLoad()})</script></div></div></main><footer class=pl-scrollbar><div class="w-full max-w-screen-xl mx-auto"><div class="text-center p-6 pin-b"><p class="text-sm text-tertiary-text">&copy; 2021 <a href=https://github.com/jmmaloney4>Jack Maloney</a>
+&#183; Powered by the <a href=https://github.com/wangchucheng/hugo-eureka class=hover:text-eureka>Eureka</a> theme for <a href=https://gohugo.io class=hover:text-eureka>Hugo</a></p></div></div></footer></body></html>
